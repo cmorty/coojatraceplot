@@ -1,69 +1,87 @@
 <?xml version="1.0"?>
 
 <project name="CoojaTrace-plot" default="jar" basedir=".">
-  <property name="cooja" value="../../.."/>
- <property name="cooja_trace" value="../"/>
-  <property name="archive" value="coojatrace-plot.jar"/>
+	
+	<property name="cooja" value="../.."/>
+	<property name="cooja_jar"        value="${cooja}/dist/cooja.jar"/>
+	<property name="mspsim_jar"       value="${cooja}/apps/mspsim/lib/mspsim.jar"/>
+	<property name="cooja_mspsim_jar" value="${cooja}/apps/mspsim/lib/cooja_mspsim.jar"/>
 
-  <target name="init">
-    <tstamp/>
+	<property name="cooja_lib" value="${cooja}/lib"/>
+	<property name="jdom_jar"         value="${cooja_lib}/jdom.jar"/>
+	<property name="log4j_jar"        value="${cooja_lib}/log4j.jar"/>
+
+
+	<property name="coojatrace" value="../coojatrace"/>
+	<property name="coojatrace_jar" value="${coojatrace}/coojatrace.jar"/>
+
+	<property name="scala_lib" value="${coojatrace}/lib"/>
+	<property name="scala-compiler_jar" value="${scala_lib}/scala-compiler.jar"   />
+	<property name="scala-library_jar" value="${scala_lib}/scala-library.jar"   />
+	<property name="scala-reactive_jar" value="${scala_lib}/scala-reactive.jar"/>
+
+
+	<property name="archive" value="coojatrace-sqlite.jar"/>
+
+	<target name="init">
+    	<tstamp/>
   	
-    <path id="build.classpath">
-  	      <pathelement location="${cooja_trace}/lib/scala-library.jar"   />
-  	      <pathelement location="build"   />
-  	</path>
-  	<taskdef resource="scala/tools/ant/antlib.xml">
-  	      <classpath>
-  	        <pathelement location="${cooja_trace}/lib/scala-compiler.jar"   />
-  	        <pathelement location="${cooja_trace}/lib/scala-library.jar"   />
-  	      </classpath>
-  	</taskdef>
-  </target>
+		<path id="build.classpath">
+	  	      <pathelement location="${scala-library_jar}"   />
+	  	      <pathelement location="build"   />
+	  	</path>
+	  	<taskdef resource="scala/tools/ant/antlib.xml">
+	  	      <classpath>
+	  	        <pathelement location="${scala-compiler_jar}" />
+	  	        <pathelement location="${scala-library_jar}"  />
+	  	      </classpath>
+	  	</taskdef>
+	</target>
 
-  <target name="compile" depends="init">
-    <mkdir dir="build"/>
-    <scalac srcdir="scala" destdir="build" deprecation="yes" addparams="-Yclosure-elim -optimise">
-      <classpath>
-        <pathelement location="${cooja}/dist/cooja.jar"/>
-      	<pathelement location="${cooja}/dist/lib/jdom.jar"/>
-        <pathelement location="${cooja}/dist/lib/log4j.jar"/>
-	<pathelement location="${cooja_trace}/coojatrace.jar"/>
-      	<pathelement location="${cooja_trace}/lib/scala-library.jar"/>
-      	<pathelement location="${cooja_trace}/lib/scala-compiler.jar"/>
-	<pathelement location="${cooja_trace}/lib/scala-reactive.jar"/>
-	<pathelement location="lib/jchart2d-3.2.2.jar"/>
-      </classpath>
-    </scalac>
-  </target>
+	<target name="compile" depends="init">
+		<mkdir dir="build"/>
+		<scalac srcdir="scala" destdir="build" deprecation="yes" addparams="-Yclosure-elim -optimise">
+			<classpath>
+				<pathelement location="${cooja_jar}"/>
+				<pathelement location="${mspsim_jar}"/>
+				<pathelement location="${log4j_jar}"/>
+				<pathelement location="${jdom_jar}"/>
+				<pathelement location="${coojatrace_jar}"/>
+	  	        <pathelement location="${scala-compiler_jar}" />
+	  	        <pathelement location="${scala-library_jar}"  />
+				<pathelement location="${scala-reactive_jar}"/>
+				<pathelement location="lib/jchart2d-3.2.2.jar"/>
+			</classpath>
+		</scalac>
+	</target>
 	
-  <target name="docs" depends="init">
-    <mkdir dir="scaladoc"   />
-    <scaladoc
-      srcdir="scala"
-      destdir="scaladoc"
-      deprecation="yes" unchecked="yes"
-      classpathref="build.classpath">
-	<classpath>
-        <pathelement location="${cooja}/dist/cooja.jar"/>
-        <pathelement location="${cooja}/lib/jdom.jar"/>
-        <pathelement location="${cooja}/lib/log4j.jar"/>
-        <pathelement location="${cooja}/apps/mspsim/lib/mspsim.jar"/>
-        <pathelement location="${cooja}/apps/mspsim/lib/cooja_mspsim.jar"/>
-        <pathelement location="lib/scala-reactive.jar"/>
-        <pathelement location="lib/scala-library.jar"/>
-        <pathelement location="lib/scala-compiler.jar"/>
-      </classpath>
+	<target name="docs" depends="init">
+		<mkdir dir="scaladoc"   />
+		<scaladoc
+			srcdir="scala"
+			destdir="scaladoc"
+			deprecation="yes" unchecked="yes"
+			classpathref="build.classpath">
+			<classpath>
+				<pathelement location="${cooja_jar}"/>
+				<pathelement location="${jdom_jar}"/>
+				<pathelement location="${log4j_jar}"/>
+				<pathelement location="${mspsim_jar}"/>
+				<pathelement location="${cooja_mspsim_jar}"/>
+	  	        <pathelement location="${scala-compiler_jar}" />
+	  	        <pathelement location="${scala-library_jar}"  />
+				<pathelement location="${scala-reactive_jar}"/>
+			</classpath>
+		</scaladoc>
+	</target>
 
-    </scaladoc>
-  </target>
-
-  <target name="clean" depends="init">
-    <delete dir="build" file="${archive}"/>
-  </target>
+	<target name="clean" depends="init">
+		<delete dir="build" file="${archive}"/>
+	</target>
 	
 	
-  <target name="jar" depends="compile">
-	<jar destfile="${archive}" basedir="build" />
-  </target>
+	<target name="jar" depends="compile">
+		<jar destfile="${archive}" basedir="build" />
+	</target>
 
 </project>
