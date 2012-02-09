@@ -21,7 +21,7 @@
 	<property name="scala-reactive_jar" value="${scala_lib}/scala-reactive.jar"/>
 
 
-	<property name="archive" value="coojatrace-sqlite.jar"/>
+	<property name="archive" value="coojatrace-plot.jar"/>
 
 	<target name="init">
     	<tstamp/>
